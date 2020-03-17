@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 import com.idontchop.blocks.entities.Blocks;
 import com.idontchop.blocks.repositories.BlocksRepository;
@@ -32,6 +33,25 @@ class BlocksApplicationTests {
 	}
 	
 	@Test
+	void addBlock () {
+		
+		Query query = new Query();
+		
+		String from = "newUsername2";
+		String to = "1111";
+		
+		query.addCriteria(Criteria.where("from").is(from));
+		Update update = new Update();
+		
+		update.addToSet("blocks", to);
+		
+		assertTrue(mongoTemplate.upsert(query, update, Blocks.class).wasAcknowledged());
+		
+		assertTrue(blocksService.hasBlock(from, to));
+		
+	}
+	
+	
 	void modifyMongo() {
 		
 		Blocks b = blocksRepository.findById("5e705c40b2e8f9498f822b27").get();
@@ -44,8 +64,8 @@ class BlocksApplicationTests {
 		
 		Query query = new Query();
 		
-		String from = "username";
-		String to = "1000";
+		String from = "newUsername";
+		String to = "1111";
 		
 
 		assertTrue (blocksService.hasBlock(from, to));
@@ -56,8 +76,8 @@ class BlocksApplicationTests {
 		
 		Query query = new Query();
 		
-		String from = "1";
-		String to = "username";
+		String from = "newUsername";
+		String to = "1111";
 		
 		assertTrue (blocksService.isBlocked(from, to));
 	}
