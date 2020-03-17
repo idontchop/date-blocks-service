@@ -25,25 +25,6 @@ public class MainController {
 	public String helloWorld () {
 		return " {\n \"message\": \"Hello World!\",\n\"Service\": \"Dating App Blocks\"\n}";
 	}
-
-	@RequestMapping ("/makeNewUser")
-	public Blocks makeNewUser () {
-		
-		Blocks b = new Blocks("username");
-		
-		Set<String> blockList = new HashSet<String>();
-		
-		for ( int c = 0; c < 1111; c++ ) {
-			blockList.add(Integer.toString(c));
-		}
-		
-		b.setBlocks(blockList);
-		
-		blocksRepository.save(b);
-		
-		return b;
-		
-	}
 	
 	@RequestMapping ("/getAllUsers")
 	public List<Blocks> getAllUsers () {
