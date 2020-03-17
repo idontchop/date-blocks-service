@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +17,9 @@ public class MainController {
 	
 	@Autowired
 	BlocksRepository blocksRepository;
+	
+	@Autowired
+	MongoTemplate mongoTemplate;
 	
 	@RequestMapping ("/helloWorld")
 	public String helloWorld () {
