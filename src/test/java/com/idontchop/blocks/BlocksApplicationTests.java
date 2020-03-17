@@ -2,6 +2,7 @@ package com.idontchop.blocks;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -33,30 +34,47 @@ class BlocksApplicationTests {
 	}
 	
 	@Test
+	void deleteBlock () {
+		
+		String from = "1";
+		
+		List<String> to = new ArrayList<>();
+		to.add("last");
+		to.add("lastagain");
+		
+		assertTrue(blocksService.deleteBlocks(from, to));
+		
+	}
+	@Test
 	void addBlock () {
 		
 		Query query = new Query();
 		
-		String from = "newUsername2";
-		String to = "1111";
+		String from = "1";
+		List<String> to = new ArrayList<>();
 		
-		query.addCriteria(Criteria.where("from").is(from));
-		Update update = new Update();
+		to.add("1111");
+		to.add("34");
+		to.add("44");
+		to.add("44");
 		
-		update.addToSet("blocks", to);
-		
-		assertTrue(mongoTemplate.upsert(query, update, Blocks.class).wasAcknowledged());
-		
-		assertTrue(blocksService.hasBlock(from, to));
+		assertTrue(blocksService.addBlocks(from, to));
 		
 	}
 	
-	
-	void modifyMongo() {
+	@Test
+	void testMongoAllBlocks() {
 		
-		Blocks b = blocksRepository.findById("5e705c40b2e8f9498f822b27").get();
-		b.setFrom("username");
-		blocksRepository.save(b);
+		String from = "username";
+		
+		List<String> toBlocks = new ArrayList<>();
+		toBlocks.add("2");
+		toBlocks.add("900");
+		toBlocks.add("1");
+		
+		assertTrue ( blocksService.allBlocks(from, toBlocks).size() == 3);
+		
+		
 	}
 	
 	@Test
@@ -64,7 +82,7 @@ class BlocksApplicationTests {
 		
 		Query query = new Query();
 		
-		String from = "newUsername";
+		String from = "1";
 		String to = "1111";
 		
 
@@ -76,7 +94,7 @@ class BlocksApplicationTests {
 		
 		Query query = new Query();
 		
-		String from = "newUsername";
+		String from = "1";
 		String to = "1111";
 		
 		assertTrue (blocksService.isBlocked(from, to));
