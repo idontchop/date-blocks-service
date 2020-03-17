@@ -26,6 +26,13 @@ public class MainController {
 		return " {\n \"message\": \"Hello World!\",\n\"Service\": \"Dating App Blocks\"\n}";
 	}
 	
+	@RequestMapping ("/makeNewUser")
+	public Blocks makeNewUser () {
+		Blocks b = new Blocks("anotherusername");
+		b.getBlocks().add("1000");
+		return blocksRepository.save(b);
+	}
+	
 	@RequestMapping ("/getAllUsers")
 	public List<Blocks> getAllUsers () {
 		return blocksRepository.findAll();

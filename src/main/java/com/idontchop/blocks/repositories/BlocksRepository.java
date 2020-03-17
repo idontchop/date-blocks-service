@@ -6,6 +6,6 @@ import com.idontchop.blocks.entities.Blocks;
 
 public interface BlocksRepository extends MongoRepository<Blocks, String> {
 
-	public Blocks findByUsername(String username);
+	public Blocks findByFrom(String from);
 	
 }

@@ -1,5 +1,7 @@
 package com.idontchop.blocks;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import com.idontchop.blocks.entities.Blocks;
 import com.idontchop.blocks.repositories.BlocksRepository;
+import com.idontchop.blocks.service.BlocksService;
 
 @SpringBootTest
 class BlocksApplicationTests {
@@ -20,20 +23,43 @@ class BlocksApplicationTests {
 	
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	BlocksService blocksService;
 
 	@Test
 	void contextLoads() {
 	}
 	
 	@Test
-	void testMongo() {
+	void modifyMongo() {
+		
+		Blocks b = blocksRepository.findById("5e705c40b2e8f9498f822b27").get();
+		b.setFrom("username");
+		blocksRepository.save(b);
+	}
+	
+	@Test
+	void testMongoHasBlock() {
 		
 		Query query = new Query();
 		
-		query.addCriteria(Criteria.where("blocks").all("1000"));
-		List<Blocks> b = mongoTemplate.find(query, Blocks.class);
+		String from = "username";
+		String to = "1000";
 		
-		b.forEach( e -> System.out.println(e.getUsername()));
+
+		assertTrue (blocksService.hasBlock(from, to));
+	}
+	
+	@Test
+	void testMongoIsBlocked() {
+		
+		Query query = new Query();
+		
+		String from = "1";
+		String to = "username";
+		
+		assertTrue (blocksService.isBlocked(from, to));
 	}
 
 }
