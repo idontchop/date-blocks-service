@@ -49,11 +49,12 @@ class BlocksApplicationTests {
 	
 	@Test
 	void testIsBlockedList () {
-		String from = "1";
+		String from = "1f";
 		List<String> to = new ArrayList<>();
-		to.addAll( List.of("5", "username2","1000", "44") );
+		to.addAll( List.of("99999") );
 		
-		assertTrue ( blocksService.isBlockedList(from, to).size() == 2);
+		assertTrue ( blocksService.isBlockedList(from, to).size() == 1);
+		assertTrue ( blocksService.isBlockedList(from, to).size() == 1);
 	}
 	
 	@Test

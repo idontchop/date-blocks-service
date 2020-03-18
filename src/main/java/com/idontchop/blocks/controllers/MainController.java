@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -70,18 +73,64 @@ public class MainController {
 		return blocksRepository.findAll();
 	}
 	
+	@GetMapping ( value = {"/block/{from}/{to}", "/block/{from}"} )
+	public Set<String> getBlock ( @PathVariable ( name = "from", required = true) String from,
+			@PathVariable ( name = "to", required = false) List<String> to ) {
+		
+		// if we didn't get a to list, just return all the user's blocks
+		if ( to == null ) {
+			return blocksService.allBlocks(from);
+		} else {
+			return blocksService.allBlocks(from, to);
+		}
+		
+	}
+	
+	@RequestMapping ( value = "/block/{from}/{to}",
+			method = { RequestMethod.POST, RequestMethod.PUT } )
+	public String putBlock ( @PathVariable ( name = "from", required=true) String from, 
+			@PathVariable ( name = "to", required=true) List<String> to )  {
+		
+		// good return 200
+		if ( blocksService.addBlocks(from, to) ) {
+			return "";
+		} else {
+			throw new ResponseStatusException ( HttpStatus.NOT_FOUND, "Not Found: " + from );
+		}
+				
+	}
+	
+	@DeleteMapping ( "/block/{from}/{to}" )
+	public String deleteBlock ( @PathVariable ( name = "from", required=true) String from,
+			@PathVariable ( name = "to", required=true) List<String> to ) {
+		
+		// good return 200
+		if ( blocksService.deleteBlocks(from, to) ) {
+			return "";
+		} else {
+			throw new ResponseStatusException ( HttpStatus.NOT_FOUND, "Not Found: " + from );
+		}
+			
+	}
+	
 	@GetMapping ( "/isBlockedList/{from}/{to}")
-	public ArrayList<String> isBlockedList ( @PathVariable String from, @PathVariable List<String> to ) {
-		return new ArrayList<String>(blocksService.allBlocks(from, to));
+	public Set<String> isBlockedList ( @PathVariable ( name = "from", required=true) String from, 
+			@PathVariable ( name = "to", required = true) List<String> to ) {
+		
+		return blocksService.isBlockedList(from, to);
+		
 	}
 		
 	@GetMapping ( "/isBlocked/{from}/{to}")
-	public ArrayList<String> isBlocked ( @PathVariable String from, @PathVariable String to) {
+	public ArrayList<String> isBlocked ( @PathVariable ( name = "from", required = true ) String from, 
+			@PathVariable ( name = "to", required = true) String to) {
+		
 		if (blocksService.isBlocked(from, to)) {
 			return new ArrayList<String>(Arrays.asList(to));
 		} else {
 			throw new ResponseStatusException( HttpStatus.NOT_FOUND, "Not Found: " + to);
 		}
+		
 	}
 	
 }
