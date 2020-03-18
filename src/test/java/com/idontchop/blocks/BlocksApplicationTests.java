@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,6 +46,16 @@ class BlocksApplicationTests {
 		assertTrue(blocksService.deleteBlocks(from, to));
 		
 	}
+	
+	@Test
+	void testIsBlockedList () {
+		String from = "1";
+		List<String> to = new ArrayList<>();
+		to.addAll( List.of("5", "username2","1000", "44") );
+		
+		assertTrue ( blocksService.isBlockedList(from, to).size() == 2);
+	}
+	
 	@Test
 	void addBlock () {
 		

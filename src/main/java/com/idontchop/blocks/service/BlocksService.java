@@ -1,5 +1,6 @@
 package com.idontchop.blocks.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -45,6 +46,35 @@ public class BlocksService {
 		
 		return mongoTemplate.count(query, Blocks.class) > 0 ? true : false;
 		
+	}
+	
+	/**
+	 * Returns a List of the blocks that exist in either direction.
+	 * 
+	 * Speed likely necessary here, this endpoint will be used with most
+	 * searches.
+	 * 
+	 * TODO: performance test
+	 * 
+	 * @param from
+	 * @param to
+	 * @return
+	 */
+	public Set<String> isBlockedList ( String from, List<String> to ) {
+		
+		// First get list of blocks in the from record
+		Set<String> newBlockedList = allBlocks ( from, to );
+		
+		// cycle through to's records checking for from		
+		to.forEach( e -> {
+			Query query = new Query();
+			query.addCriteria(Criteria.where(FROM).is(e).and(TOARRAY).all(from));
+			if ( mongoTemplate.count(query, Blocks.class) > 0 ) {
+				newBlockedList.add(e);
+			}
+		});
+		
+		return newBlockedList;
 	}
 	
 	/**
