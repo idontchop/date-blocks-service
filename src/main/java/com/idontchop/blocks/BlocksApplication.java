@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *  After brainstorming, determined that blocks should be written twice, once in who someone blocked
  *  and who blocked the user. Would mean each document has a blocked and isBlocked field.
  *  
- *  Duplication of data and slower writes but would make reads super quick.
+ *  Duplication of data and slower writes but would make reads super quick. 
  *  
  * @author micro
  *
